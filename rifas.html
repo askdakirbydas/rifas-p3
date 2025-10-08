@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Controle de Rifas Online (200 Rifas)</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  .info {
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 5px;
+    max-width: 600px;
+  }
+  .rifa {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #888;
+    cursor: pointer;
+    border-radius: 4px;
+    user-select: none;
+  }
+  .vendida {
+    background-color: #ff9999;
+    text-decoration: line-through;
+  }
+</style>
+</head>
+<body>
+  <h1>Controle de Rifas Online</h1>
+
+  <div class="info">
+    <p><strong>Total de rifas:</strong> <span id="totalRifas">200</span></p>
+    <p><strong>Rifas vendidas:</strong> <span id="vendidas">0</span></p>
+    <p><strong>Rifas restantes:</strong> <span id="restantes">200</span></p>
+    <p><strong>Total arrecadado:</strong> R$ <span id="arrecadado">0,00</span></p>
+  </div>
+
+  <div class="grid" id="rifasContainer"></div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Importa módulos do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+    // Configuração do seu projeto Firebase (⚠️ substitua se necessário)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJhMJ8kw0mGBZa6OMLzHaHszEjal2gvZc",
+      authDomain: "rifas-p3.firebaseapp.com",
+      projectId: "rifas-p3",
+      storageBucket: "rifas-p3.firebasestorage.app",
+      messagingSenderId: "387447893931",
+      appId: "1:387447893931:web:11d97c88e260700aed6cee",
+      measurementId: "G-L8MVRF7KEG"
+    };
+
+    // Inicializa o Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ---------------------
+    // Configurações da Rifa
+    // ---------------------
+    const TOTAL_RIFAS = 200;
+    const VALOR_RIFA = 2.0;
+    const rifasDoc = doc(db, "rifas", "dados"); // Documento principal
+
+    // Elementos do HTML
+    const container = document.getElementById('rifasContainer');
+    const vendidasSpan = document.getElementById('vendidas');
+    const restantesSpan = document.getElementById('restantes');
+    const arrecadadoSpan = document.getElementById('arrecadado');
+
+    let rifasVendidas = [];
+
+    // Cria os botões das rifas
+    for (let i = 1; i <= TOTAL_RIFAS; i++) {
+      const div = document.createElement('div');
+      div.textContent = i;
+      div.className = 'rifa';
+      div.addEventListener('click', () => alternarRifa(i));
+      container.appendChild(div);
+    }
+
+    // Atualiza o visual das rifas e valores
+    function atualizarTela() {
+      document.querySelectorAll('.rifa').forEach(div => {
+        const num = parseInt(div.textContent);
+        div.classList.toggle('vendida', rifasVendidas.includes(num));
+      });
+
+      const vendidas = rifasVendidas.length;
+      const restantes = TOTAL_RIFAS - vendidas;
+      const arrecadado = vendidas * VALOR_RIFA;
+
+      vendidasSpan.textContent = vendidas;
+      restantesSpan.textContent = restantes;
+      arrecadadoSpan.textContent = arrecadado.toFixed(2).replace('.', ',');
+    }
+
+    // Alternar rifa vendida ↔ disponível
+    async function alternarRifa(num) {
+      if (rifasVendidas.includes(num)) {
+        rifasVendidas = rifasVendidas.filter(n => n !== num);
+      } else {
+        rifasVendidas.push(num);
+      }
+      await setDoc(rifasDoc, { vendidas: rifasVendidas });
+    }
+
+    // Escuta mudanças no banco de dados em tempo real
+    onSnapshot(rifasDoc, (docSnap) => {
+      if (docSnap.exists()) {
+        rifasVendidas = docSnap.data().vendidas || [];
+        atualizarTela();
+      } else {
+        setDoc(rifasDoc, { vendidas: [] });
+      }
+    });
+  </script>
+</body>
+</html>
