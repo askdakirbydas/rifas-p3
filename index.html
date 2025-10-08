@@ -1,36 +1,101 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Rifas JAC</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
-  .info {
-    margin-bottom: 15px;
-    font-size: 18px;
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-    gap: 5px;
-    max-width: 600px;
-  }
-  .rifa {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #888;
-    cursor: pointer;
-    border-radius: 4px;
-    user-select: none;
-  }
-  .vendida {
-    background-color: #ff9999;
-    text-decoration: line-through;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rifas JAC</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      text-align: center;
+    }
+
+    .info {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 10px;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .rifa {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #888;
+      cursor: pointer;
+      border-radius: 4px;
+      user-select: none;
+      font-size: 1.2rem;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .rifa:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+    }
+
+    .vendida {
+      background-color: #ff9999;
+      text-decoration: line-through;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        margin: 10px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .info {
+        font-size: 1rem;
+      }
+
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        gap: 8px;
+      }
+
+      .rifa {
+        padding: 8px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      .info {
+        font-size: 0.9rem;
+      }
+
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+        gap: 5px;
+      }
+
+      .rifa {
+        padding: 6px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <h1>Rifas JAC P3</h1>
@@ -116,4 +181,3 @@
   </script>
 </body>
 </html>
-
