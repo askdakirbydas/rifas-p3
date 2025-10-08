@@ -162,12 +162,16 @@
     }
 
     async function alternarRifa(num) {
-      if (rifasVendidas.includes(num)) {
-        rifasVendidas = rifasVendidas.filter(n => n !== num);
-      } else {
-        rifasVendidas.push(num);
+      const confirmacao = window.confirm(`Tem certeza que deseja ${rifasVendidas.includes(num) ? 'desmarcar' : 'marcar'} a rifa número ${num}?`);
+      
+      if (confirmacao) {
+        if (rifasVendidas.includes(num)) {
+          rifasVendidas = rifasVendidas.filter(n => n !== num);
+        } else {
+          rifasVendidas.push(num);
+        }
+        await set(rifasRef, { vendidas: rifasVendidas });
       }
-      await set(rifasRef, { vendidas: rifasVendidas });
     }
 
     onValue(rifasRef, (snapshot) => {
